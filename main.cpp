@@ -41,14 +41,39 @@ static auto __ __attribute__((unused)) = []() { // NOLINT
 
 class Solution {
 public:
-  bool func(vector<int> &arr) { return true; }
+  bool toletter1(string s, int i) { return s[i] >= '1' && s[i] <= '9'; }
+
+  bool toletter2(string s, int i) {
+    return (s.size() > i + 1) &&
+           (s[i] == '1' || (s[i] == '2' && s[i + 1] <= '6'));
+  }
+
+  int numDecodings(string s) {
+    int n = s.size();
+    if (s[0] == '0')
+      return 0;
+    vector<int> dp(n + 1);
+    dp[0] = 1;
+    dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+      if (toletter1(s, i - 1)) {
+        dp[i] += dp[i - 1];
+      }
+      if (toletter2(s, i - 2)) {
+        dp[i] += dp[i - 2];
+      }
+      PV2(dp[i], i);
+    }
+    return dp[n];
+  }
 };
 
 void test1() {
   cout << boolalpha;
   vector<int> arr{1, 2, 3};
 
-  cout << "1 ? " << Solution().func(arr) << endl;
+  cout << "2? " << Solution().numDecodings("12") << endl;
+  cout << "3? " << Solution().numDecodings("226") << endl;
 }
 
 void test2() {}
